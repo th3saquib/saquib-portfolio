@@ -1,29 +1,75 @@
 import { NextResponse } from "next/server";
+import { execFile } from "child_process";
+import { promisify } from "util";
+
+const execFileAsync = promisify(execFile);
 
 export const dynamic = "force-dynamic";
+
+let cachedProjects: BehanceProject[] | null = null;
+let lastFetchTime = 0;
+const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
+
+async function fetchRssXml(url: string): Promise<string> {
+  // ponytail: Behance blocks Node HTTP/1.1 fetch with 429 on datacenter IPs;
+  // curl negotiates HTTP/2 with real TLS ALPN which Behance accepts.
+  try {
+    const curlBin = "curl";
+    const { stdout } = await execFileAsync(curlBin, [
+      "-s",
+      "-L",
+      "-A",
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+      "-H",
+      "Accept: application/xml, text/xml, */*",
+      url,
+    ], { maxBuffer: 10 * 1024 * 1024 });
+
+    if (stdout && stdout.includes("<rss")) {
+      return stdout;
+    }
+  } catch (err) {
+    console.warn("Curl fetch failed, falling back to standard fetch:", err);
+  }
+
+  const res = await fetch(url, {
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+      Accept: "application/xml, text/xml, */*",
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch Behance feed: ${res.status} ${res.statusText}`);
+  }
+
+  return res.text();
+}
 
 export async function GET() {
   const feedUrl = "https://www.behance.net/feeds/user?username=saquibali1";
 
+  const now = Date.now();
+  if (cachedProjects && now - lastFetchTime < CACHE_TTL_MS) {
+    return NextResponse.json({ success: true, projects: cachedProjects });
+  }
+
   try {
-    const res = await fetch(feedUrl, {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "Accept": "application/xml, text/xml, */*",
-      },
-      next: { revalidate: 3600 }, // Cache feed for 1 hour
-    });
-
-    if (!res.ok) {
-      throw new Error(`Failed to fetch Behance feed: ${res.status} ${res.statusText}`);
-    }
-
-    const xmlText = await res.text();
+    const xmlText = await fetchRssXml(feedUrl);
     const projects = parseBehanceRss(xmlText);
+
+    if (projects.length > 0) {
+      cachedProjects = projects;
+      lastFetchTime = now;
+    }
 
     return NextResponse.json({ success: true, projects });
   } catch (error: any) {
     console.error("Behance RSS API route error:", error);
+    if (cachedProjects && cachedProjects.length > 0) {
+      return NextResponse.json({ success: true, projects: cachedProjects });
+    }
     return NextResponse.json(
       { success: false, error: error.message || "Failed to load Behance feed" },
       { status: 500 }

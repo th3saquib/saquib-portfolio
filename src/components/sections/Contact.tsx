@@ -57,7 +57,7 @@ export function Contact() {
         <i className="icon icon-send" />
         Contact
       </div>
-      <h2 className="s-title letter-space--2 split-text effect-blur-fade">
+      <h2 className="s-title letter-space--2 text-black-72 split-text effect-blur-fade">
         If you have a general or project <br className="d-none d-lg-block" />
         enquiry, please drop me an email <br className="d-none d-lg-block" />
         or fill the form - available now
@@ -85,6 +85,7 @@ export function Contact() {
               name="name" 
               id="name" 
               placeholder="Your Name *" 
+              aria-label="Your Name"
               required 
               disabled={loading} 
             />
@@ -95,6 +96,7 @@ export function Contact() {
               name="email" 
               id="email" 
               placeholder="Email Address *" 
+              aria-label="Email Address"
               required 
               disabled={loading} 
             />
@@ -104,6 +106,7 @@ export function Contact() {
               name="message" 
               id="message" 
               placeholder="Project Description" 
+              aria-label="Project Description"
               disabled={loading} 
             />
           </fieldset>

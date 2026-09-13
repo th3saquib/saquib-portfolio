@@ -63,13 +63,12 @@ export function Services() {
 
                                     <div className="service-tag">
                                         {s.tags.map((tag) => (
-                                            <a
+                                            <span
                                                 key={tag}
-                                                href="#"
-                                                className="tag-item text-body-3 fw-medium text-black-72 link"
+                                                className="tag-item text-body-3 fw-medium text-black-72"
                                             >
                                                 {tag}
-                                            </a>
+                                            </span>
                                         ))}
                                     </div>
 

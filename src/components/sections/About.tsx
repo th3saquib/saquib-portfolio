@@ -17,6 +17,18 @@ export function About() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedCert]);
 
+  // Lock body scroll when certificate modal is open
+  useEffect(() => {
+    if (selectedCert) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [selectedCert]);
+
   return (
     <div id="about" className="section-about flat-spacing">
       <div className="sect-tag text-caption fw-medium effectFade fadeUp no-div">
@@ -103,6 +115,7 @@ export function About() {
           >
             {/* Close Button */}
             <button
+              aria-label="Close certificate modal"
               style={{
                 position: "absolute",
                 top: "16px",

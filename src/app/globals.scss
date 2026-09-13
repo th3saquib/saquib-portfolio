@@ -106,7 +106,7 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: var(--black-40);
+    color: var(--black-56);
   }
 }
 
@@ -210,10 +210,10 @@
       box-shadow: none;
     }
     .text-val {
-      color: var(--white-64);
+      color: rgba(255, 255, 255, 0.72);
     }
     &:hover .text-val {
-      color: var(--white);
+      color: #ffffff;
     }
   }
   .social-connect-block-inline {
@@ -226,6 +226,108 @@
       background: #1e1f26;
       border-color: rgba(255, 255, 255, 0.1);
     }
+  }
+}
+
+/* Tab Menu Work - Theme Adaptive */
+.tab-menu-work {
+  background: var(--black-6) !important;
+  border: 1px solid var(--black-8) !important;
+
+  .tab-btn {
+    color: var(--black-56) !important;
+
+    &.active {
+      background: var(--primary) !important;
+      color: #ffffff !important;
+      box-shadow: 0 2px 12px rgba(255, 46, 46, 0.35);
+    }
+
+    &:hover:not(.active) {
+      color: var(--black-72) !important;
+      background: var(--black-6) !important;
+    }
+  }
+}
+
+/* Light Mode Offcanvas Configuration Drawer */
+.light-mode .offcanvas-color,
+[data-theme="light"] .offcanvas-color {
+  .offcanvas-content {
+    background: #ffffff !important;
+    border-left: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: -8px 0 32px rgba(0, 0, 0, 0.1) !important;
+  }
+  .canvas-header h5,
+  .title {
+    color: var(--black) !important;
+  }
+  .icon-close-popup {
+    color: var(--black-72) !important;
+  }
+  .choose-item .text {
+    color: var(--black-72) !important;
+  }
+}
+
+/* Light Mode Website Project Cards in Work Section */
+.light-mode .wg-work .wrap,
+[data-theme="light"] .wg-work .wrap {
+  --white-8: rgba(0, 0, 0, 0.08);
+  --white-40: rgba(0, 0, 0, 0.40);
+  --white-56: rgba(0, 0, 0, 0.56);
+  --white-72: rgba(0, 0, 0, 0.72);
+  --white-92: rgba(0, 0, 0, 0.92);
+  --black-6: rgba(0, 0, 0, 0.06);
+  --black-15: rgba(0, 0, 0, 0.15);
+  --black-40: rgba(0, 0, 0, 0.40);
+  --black-56: rgba(0, 0, 0, 0.56);
+  --black-72: rgba(0, 0, 0, 0.72);
+
+  .w-image {
+    background: rgba(255, 255, 255, 0.6) !important;
+  }
+  .tf-btn-action.style-white {
+    background: #000000;
+    color: #ffffff;
+    border: 1px solid #000000;
+    .icon,
+    .text {
+      color: #ffffff !important;
+    }
+    &:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+  }
+}
+
+/* Light Mode Browser Mockup */
+.light-mode .browser-mockup,
+[data-theme="light"] .browser-mockup {
+  background: #f4f5f7;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+
+  .browser-header {
+    background: #e9ecf0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .browser-address {
+    background: #ffffff;
+    color: rgba(0, 0, 0, 0.65);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+  }
+}
+
+/* Contact form inputs contrast */
+form input[type="text"],
+form input[type="email"],
+form textarea {
+  color: var(--black-72) !important;
+  &:focus {
+    color: var(--black) !important;
   }
 }
 
@@ -243,4 +345,5 @@
     transform: translateY(0);
   }
 }
+
 

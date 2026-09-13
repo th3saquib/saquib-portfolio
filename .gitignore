@@ -44,3 +44,6 @@ next-env.d.ts
 *.key
 *.key.pub
 
+# graphify
+graphify-out/
+

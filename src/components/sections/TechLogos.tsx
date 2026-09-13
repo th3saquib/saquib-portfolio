@@ -181,7 +181,7 @@ export function TechLogos() {
                 flexWrap: "wrap",
                 gap: "8px",
                 marginBottom: "32px",
-                borderBottom: "1px solid rgba(255,255,255,0.05)",
+                borderBottom: "1px solid var(--black-8)",
                 paddingBottom: "16px"
             }}>
                 {categories.map((cat) => (
@@ -189,9 +189,9 @@ export function TechLogos() {
                         key={cat.id}
                         type="button"
                         style={{
-                            background: activeFilter === cat.id ? "rgba(255,255,255,0.06)" : "transparent",
-                            border: activeFilter === cat.id ? "1px solid rgba(255,255,255,0.12)" : "1px solid transparent",
-                            color: activeFilter === cat.id ? "#fff" : "rgba(255,255,255,0.5)",
+                            background: activeFilter === cat.id ? "var(--black-4)" : "transparent",
+                            border: activeFilter === cat.id ? "1px solid var(--black-8)" : "1px solid transparent",
+                            color: activeFilter === cat.id ? "var(--black-72)" : "var(--black-40)",
                             padding: "8px 16px",
                             borderRadius: "20px",
                             fontSize: "13px",
@@ -214,8 +214,8 @@ export function TechLogos() {
                             className="tech-logo-card" 
                             style={{
                                 "--hover-glow": item.color,
-                                background: "rgba(255,255,255,0.02)",
-                                border: "1px solid rgba(255,255,255,0.05)",
+                                background: "var(--black-4)",
+                                border: "1px solid var(--black-8)",
                                 borderRadius: "16px",
                                 padding: "24px 16px",
                                 display: "flex",
@@ -248,7 +248,7 @@ export function TechLogos() {
                             <span style={{
                                 fontSize: "14px",
                                 fontWeight: 500,
-                                color: "rgba(255,255,255,0.7)",
+                                color: "var(--black-72)",
                                 transition: "color 0.2s"
                             }} className="tech-logo-name">
                                 {item.name}
@@ -262,7 +262,7 @@ export function TechLogos() {
             <style jsx>{`
                 .tech-logo-card:hover {
                     transform: translateY(-5px);
-                    background: rgba(255, 255, 255, 0.04);
+                    background: var(--black-6);
                     border-color: var(--hover-glow) !important;
                     box-shadow: 0 10px 25px var(--hover-glow);
                 }
@@ -270,7 +270,7 @@ export function TechLogos() {
                     transform: scale(1.1);
                 }
                 .tech-logo-card:hover .tech-logo-name {
-                    color: #fff;
+                    color: var(--black-72);
                 }
             `}</style>
         </div>

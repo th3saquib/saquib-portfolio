@@ -30,7 +30,14 @@ export function DesktopSidebar({ positionClass = "pst-v1" }: DesktopSidebarProps
   return (
     <div className={`sidebar-tools ${positionClass}`}>
       <div className="nav-top">
-        <div className={`tf-btn-icon toggle-switch-mode${isDark ? " active" : ""}`} onClick={handleToggle}>
+        <div 
+          role="button" 
+          tabIndex={0} 
+          aria-label={`Switch to ${isDark ? "light" : "dark"} theme`}
+          className={`tf-btn-icon toggle-switch-mode${isDark ? " active" : ""}`} 
+          onClick={handleToggle}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleToggle(); }}
+        >
           <i className="icon icon-light" />
         </div>
       </div>
@@ -45,7 +52,7 @@ export function DesktopSidebar({ positionClass = "pst-v1" }: DesktopSidebarProps
         ))}
       </ul>
       <div className="nav-bottom">
-        <a href="#" className="tf-btn-icon go-top" onClick={goTop}>
+        <a href="#home" aria-label="Scroll to top" className="tf-btn-icon go-top" onClick={goTop}>
           <i className="icon icon-arrow-top" />
         </a>
       </div>

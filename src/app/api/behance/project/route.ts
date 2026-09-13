@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
+import { execFile } from "child_process";
+import { promisify } from "util";
+
+const execFileAsync = promisify(execFile);
 
 export const dynamic = "force-dynamic";
+
+// In-memory cache for project gallery images (24 hours)
+const projectCache = new Map<string, { images: string[]; timestamp: number }>();
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
 // Preferred image sizes from highest quality to lowest
 const SIZE_PREFERENCE = [
@@ -15,6 +23,28 @@ const SIZE_PREFERENCE = [
   "hd_webp",
   "disp_webp",
 ];
+
+async function fetchPageWithCurl(url: string, cookie?: string): Promise<string> {
+  // ponytail: Behance blocks HTTP/1.1 from cloud VPS with 429; curl HTTP/2 succeeds.
+  const curlBin = "curl";
+  const args = [
+    "-s",
+    "-L",
+    "-A",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "-H",
+    "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+    "-H",
+    "Accept-Language: en-US,en;q=0.9",
+  ];
+  if (cookie) {
+    args.push("-b", cookie);
+  }
+  args.push(url);
+
+  const { stdout } = await execFileAsync(curlBin, args, { maxBuffer: 10 * 1024 * 1024 });
+  return stdout;
+}
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -35,49 +65,48 @@ export async function GET(request: NextRequest) {
     );
   }
 
+  if (projectCache.has(projectUrl)) {
+    const cached = projectCache.get(projectUrl)!;
+    if (Date.now() - cached.timestamp < CACHE_TTL_MS) {
+      return NextResponse.json({ success: true, images: cached.images });
+    }
+  }
+
   const userAgent =
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36";
 
   try {
-    // 1. Initial request to check if we can load the page directly or if we get challenged
-    let res = await fetch(projectUrl, {
-      headers: {
-        "User-Agent": userAgent,
-        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-      },
-      next: { revalidate: 86400 }, // Cache project images for 24 hours
-    });
-
-    let html = await res.text();
-
-    // 2. Handle JS Challenge (Cookie setup)
-    if (res.status === 403 && html.includes("js_challenge_value")) {
-      const cookieRegex = /js_challenge_value=([^;]+)/;
-      const cookieMatch = cookieRegex.exec(html);
-      
-      if (cookieMatch) {
-        const cookieValue = cookieMatch[1];
-        
-        // Retry fetch with the challenge cookie
-        res = await fetch(projectUrl, {
-          headers: {
-            "User-Agent": userAgent,
-            Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-            Cookie: `js_challenge_value=${cookieValue}`,
-          },
-          next: { revalidate: 86400 },
-        });
-        
-        if (!res.ok) {
-          throw new Error(`Failed to load Behance project after solving challenge: ${res.status}`);
+    let html = "";
+    try {
+      html = await fetchPageWithCurl(projectUrl);
+      if (html.includes("js_challenge_value")) {
+        const cookieMatch = /js_challenge_value=([^;"]+)/.exec(html);
+        if (cookieMatch) {
+          html = await fetchPageWithCurl(projectUrl, `js_challenge_value=${cookieMatch[1]}`);
         }
-        
-        html = await res.text();
-      } else {
-        throw new Error("Behance cookie challenge detected but could not extract value.");
       }
-    } else if (!res.ok) {
-      throw new Error(`Failed to fetch Behance page: ${res.status}`);
+    } catch (curlErr) {
+      console.warn("Curl failed for project detail, trying fetch fallback:", curlErr);
+      let res = await fetch(projectUrl, {
+        headers: {
+          "User-Agent": userAgent,
+          Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        },
+      });
+      html = await res.text();
+      if (res.status === 403 && html.includes("js_challenge_value")) {
+        const cookieMatch = /js_challenge_value=([^;]+)/.exec(html);
+        if (cookieMatch) {
+          res = await fetch(projectUrl, {
+            headers: {
+              "User-Agent": userAgent,
+              Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+              Cookie: `js_challenge_value=${cookieMatch[1]}`,
+            },
+          });
+          html = await res.text();
+        }
+      }
     }
 
     let images: string[] = [];
@@ -190,6 +219,10 @@ export async function GET(request: NextRequest) {
           }
         }
       }
+    }
+
+    if (images.length > 0) {
+      projectCache.set(projectUrl, { images, timestamp: Date.now() });
     }
 
     return NextResponse.json({ success: true, images });

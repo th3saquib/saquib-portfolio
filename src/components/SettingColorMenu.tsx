@@ -139,11 +139,11 @@ export function SettingColorMenu({
                                 gap: "12px",
                                 marginBottom: "20px",
                                 padding: "12px 16px",
-                                background: "rgba(255,255,255,0.03)",
+                                background: "var(--black-4)",
                                 borderRadius: "12px",
-                                border: "1px solid rgba(255,255,255,0.06)"
+                                border: "1px solid var(--black-8)"
                             }}>
-                                <span style={{ color: "rgba(255,255,255,0.8)", fontSize: "14px", fontWeight: 500 }}>Enable Video Background</span>
+                                <span style={{ color: "var(--black-72)", fontSize: "14px", fontWeight: 500 }}>Enable Video Background</span>
                                 <div style={{ marginLeft: "auto" }}>
                                     <label className="switch" style={{
                                         position: "relative",
@@ -169,7 +169,7 @@ export function SettingColorMenu({
                                             left: 0,
                                             right: 0,
                                             bottom: 0,
-                                            backgroundColor: videoEnabled ? "var(--primary)" : "rgba(255,255,255,0.1)",
+                                            backgroundColor: videoEnabled ? "var(--primary)" : "var(--black-16)",
                                             transition: ".3s",
                                             borderRadius: "24px"
                                         }}>
@@ -192,7 +192,7 @@ export function SettingColorMenu({
                             {/* Video Selector - only visible when enabled */}
                             {videoEnabled && (
                                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                                    <span style={{ color: "rgba(255,255,255,0.4)", fontSize: "11px", fontWeight: 500, textTransform: "uppercase", letterSpacing: "1px", marginBottom: "4px" }}>Select Video Source</span>
+                                    <span style={{ color: "var(--black-40)", fontSize: "11px", fontWeight: 500, textTransform: "uppercase", letterSpacing: "1px", marginBottom: "4px" }}>Select Video Source</span>
                                     <div style={{ display: "grid", gap: "10px" }}>
                                         {[
                                             { path: "/assets/images/overlay.mp4", label: "Video Background 1" },
@@ -204,8 +204,8 @@ export function SettingColorMenu({
                                                 type="button"
                                                 className={`choose-item${selectedVideo === vid.path ? " active" : ""}`}
                                                 style={{
-                                                    background: selectedVideo === vid.path ? "rgba(255,255,255,0.06)" : "transparent",
-                                                    border: selectedVideo === vid.path ? "1px solid rgba(255,255,255,0.15)" : "1px solid rgba(255,255,255,0.05)",
+                                                    background: selectedVideo === vid.path ? "var(--black-6)" : "transparent",
+                                                    border: selectedVideo === vid.path ? "1px solid var(--black-16)" : "1px solid var(--black-4)",
                                                     padding: "10px 14px",
                                                     borderRadius: "10px",
                                                     cursor: "pointer",
@@ -225,15 +225,15 @@ export function SettingColorMenu({
                                                     width: "20px",
                                                     height: "20px",
                                                     borderRadius: "50%",
-                                                    background: selectedVideo === vid.path ? "var(--primary)" : "rgba(255,255,255,0.05)",
+                                                    background: selectedVideo === vid.path ? "var(--primary)" : "var(--black-8)",
                                                     display: "flex",
                                                     alignItems: "center",
                                                     justifyContent: "center",
                                                     fontSize: "9px"
                                                 }}>
-                                                    <span style={{ color: "#fff", marginLeft: selectedVideo === vid.path ? "2px" : "0" }}>▶</span>
+                                                    <span style={{ color: selectedVideo === vid.path ? "#fff" : "var(--black-56)", marginLeft: selectedVideo === vid.path ? "2px" : "0" }}>▶</span>
                                                 </div>
-                                                <span style={{ color: selectedVideo === vid.path ? "#fff" : "rgba(255,255,255,0.6)", fontSize: "13px", fontWeight: 500 }}>
+                                                <span style={{ color: selectedVideo === vid.path ? "var(--black-72)" : "var(--black-56)", fontSize: "13px", fontWeight: 500 }}>
                                                     {vid.label}
                                                 </span>
                                             </button>

@@ -13,6 +13,7 @@ export type GraphicDesign = {
   title: string;
   category: string;
   image: string;
+  link?: string;
 };
 
 export const works: Work[] = [
@@ -100,33 +101,69 @@ export const works: Work[] = [
 
 export const graphicDesigns: GraphicDesign[] = [
   {
-    title: "Vibrant Brand Identity Suite",
-    category: "Branding",
-    image: "/assets/images/design/design-1.jpg",
+    title: "Real Estate Stories",
+    category: "Social Media & Ads",
+    image: "https://mir-s3-cdn-cf.behance.net/projects/404/a3ea6e230450479.6877300151ae3.png",
+    link: "https://www.behance.net/gallery/230450479/Real-Estate-Stories",
   },
   {
-    title: "Corporate Marketing Banners",
-    category: "Social Media Banners",
-    image: "/assets/images/design/design-2.jpg",
+    title: "Seemless Carousel Post",
+    category: "Social Carousel",
+    image: "https://mir-s3-cdn-cf.behance.net/projects/404/a7de2c228284525.Y3JvcCwxNzI1LDEzNTAsMCww.jpg",
+    link: "https://www.behance.net/gallery/228284525/Seemless-Carousel-Post",
   },
   {
-    title: "Interactive UI Dashboard Concept",
-    category: "UI/UX Design",
-    image: "/assets/images/design/design-3.jpg",
+    title: "Elite Company Ads",
+    category: "Social Media & Ads",
+    image: "https://mir-s3-cdn-cf.behance.net/projects/404/08fb1f228284107.Y3JvcCwxNzU1LDEzNzIsMCw1Mg.jpg",
+    link: "https://www.behance.net/gallery/228284107/Elite-Company-Ads",
   },
   {
-    title: "Promotional Banner Ads",
-    category: "Advertising Ads",
-    image: "/assets/images/design/design-4.jpg",
+    title: "Real Estate Ads",
+    category: "Social Media & Ads",
+    image: "https://mir-s3-cdn-cf.behance.net/projects/404/d32425228283891.Y3JvcCwxMzUwLDEwNTUsMCwzNTQ.jpg",
+    link: "https://www.behance.net/gallery/228283891/Real-Estate-Ads",
   },
   {
-    title: "Minimalist Business Card Sets",
-    category: "Print Design",
-    image: "/assets/images/design/design-5.jpg",
+    title: "Social Media Design",
+    category: "Social Media & Ads",
+    image: "https://mir-s3-cdn-cf.behance.net/projects/404/8741a3228282541.Y3JvcCwxNDAwLDEwOTUsMCwyMTg.jpg",
+    link: "https://www.behance.net/gallery/228282541/Social-Media-Design",
   },
   {
-    title: "Product Package Wrapping",
-    category: "Packaging Design",
-    image: "/assets/images/design/design-6.jpg",
+    title: "Real Estate Ads",
+    category: "Social Media & Ads",
+    image: "https://mir-s3-cdn-cf.behance.net/projects/404/be007c228282319.Y3JvcCwxMzUwLDEwNTUsMCww.jpg",
+    link: "https://www.behance.net/gallery/228282319/Real-Estate-Ads",
+  },
+  {
+    title: "Luxury Lifestyle",
+    category: "Social Media & Ads",
+    image: "https://mir-s3-cdn-cf.behance.net/projects/404/e51b1d228281987.Y3JvcCwxMzUwLDEwNTUsMCwyOTA.jpg",
+    link: "https://www.behance.net/gallery/228281987/Luxury-Lifestyle",
+  },
+  {
+    title: "Swiggy Digital Banner",
+    category: "Social Media & Ads",
+    image: "https://mir-s3-cdn-cf.behance.net/projects/404/d6424a201119003.Y3JvcCwxNTM0LDEyMDAsMTkzLDA.jpg",
+    link: "https://www.behance.net/gallery/201119003/Swiggy-Digital-Banner",
+  },
+  {
+    title: "Real Estate Brochure",
+    category: "Print & Flyer",
+    image: "https://mir-s3-cdn-cf.behance.net/projects/404/5c377a200498061.Y3JvcCwyNDc5LDE5MzksMCwyNDU.jpg",
+    link: "https://www.behance.net/gallery/200498061/Real-Estate-Brochure",
+  },
+  {
+    title: "Flyer Design",
+    category: "Print & Flyer",
+    image: "https://mir-s3-cdn-cf.behance.net/projects/404/5f9b86200250639.Y3JvcCwyNTUxLDE5OTUsMCw3ODk.jpg",
+    link: "https://www.behance.net/gallery/200250639/Flyer-Design",
+  },
+  {
+    title: "Concept Logo",
+    category: "Branding & Logo",
+    image: "https://mir-s3-cdn-cf.behance.net/projects/404/a173ea198186185.Y3JvcCwyNzEwLDIxMjAsMCww.jpg",
+    link: "https://www.behance.net/gallery/198186185/Concept-Logo",
   },
 ];

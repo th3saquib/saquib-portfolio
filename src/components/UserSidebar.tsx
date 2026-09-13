@@ -118,7 +118,7 @@ export function UserSidebar({ variant = "v1" }: UserSidebarProps) {
                     </div>
                     <div className="br-line" />
                     <div className="action-group">
-                        <a href="#" className="tf-btn-action">
+                        <a href="#contact" className="tf-btn-action">
                             <span className="ic-wrap">
                                 <i className="icon icon-arrow-right-top" />
                             </span>

@@ -8,7 +8,7 @@ export function Footer() {
         <h5 className="quote-text font-3 fw-normal text-black-72">
           <span className="text-black-56">“</span>
           The best architectures are quiet—they absorb complexity in the background so human creativity can operate without friction in the foreground.
-          <span className="text-black-56">“</span>
+          <span className="text-black-56">”</span>
         </h5>
         <p className="quote-author font-3 text-black-56 h6 text-end">Saquib Ali</p>
       </div>
@@ -33,7 +33,7 @@ export function Footer() {
             </text>
           </svg>
         </div>
-        <a href="#" className="f-logo effectFade fadeZoom">
+        <a href="#home" className="f-logo effectFade fadeZoom" aria-label="Back to top">
           <div className="logo">
             <Logo width={32} height={32} />
           </div>

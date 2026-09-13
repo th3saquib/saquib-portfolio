@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { navItems } from "@/data/nav";
 
 export function MobileMenu() {
@@ -24,15 +24,21 @@ export function MobileMenu() {
   return (
     <>
       <div className="action-open-mobile d-lg-none">
-        <div className="tf-btn-icon style-2" onClick={toggle}>
+        <button 
+          type="button"
+          aria-label={open ? "Close navigation menu" : "Open navigation menu"}
+          className="tf-btn-icon style-2" 
+          onClick={toggle}
+          style={{ background: "transparent", border: "none", cursor: "pointer", padding: 0 }}
+        >
           <div className={`btn-mobile-menu${open ? " close" : ""}`}>
             <span />
           </div>
-        </div>
+        </button>
         <div className={`nav-mobile-list${open ? " open" : ""}`}>
           <ul className="nav-mobile-item">
             {navItems.map((item, i) => (
-              <div key={item.href + i}>
+              <Fragment key={item.href + i}>
                 <li className="nav-item">
                   <a href={item.href} className="item-link scroll-link" onClick={() => setOpen(false)}>
                     <i className={`icon ${item.icon}`} />
@@ -40,7 +46,7 @@ export function MobileMenu() {
                   </a>
                 </li>
                 {item.separator === "after" && <li className="br-line" />}
-              </div>
+              </Fragment>
             ))}
           </ul>
         </div>

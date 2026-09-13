@@ -32,7 +32,7 @@ export function Work() {
             : graphicDesigns.map((d, index) => ({
                 id: `local-${index}`,
                 title: d.title,
-                link: "https://www.behance.net/saquibali1",
+                link: d.link || "https://www.behance.net/saquibali1",
                 publishedDate: "",
                 thumbnail: d.image,
                 image: d.image,
@@ -83,6 +83,18 @@ export function Work() {
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [lightboxIndex, resolvedDesigns]);
+
+    // Lock body scroll when lightbox is open
+    useEffect(() => {
+        if (lightboxIndex !== null) {
+            document.body.classList.add("overflow-hidden");
+        } else {
+            document.body.classList.remove("overflow-hidden");
+        }
+        return () => {
+            document.body.classList.remove("overflow-hidden");
+        };
+    }, [lightboxIndex]);
 
     // Fetch images inside Behance project when selected
     useEffect(() => {
@@ -135,7 +147,7 @@ export function Work() {
                 <i className="icon icon-high-light" />
                 Work Highlights
             </div>
-            <h2 className="s-title letter-space--2 text-black-72 split-text effect-blur-fade" style={{ marginBottom: "32px", fontSize: "40px" }}>
+            <h2 className="s-title letter-space--2 text-black-72 split-text effect-blur-fade" style={{ marginBottom: "32px" }}>
                 Featured Projects & Design Work
             </h2>
 
@@ -285,8 +297,8 @@ export function Work() {
                             {[1, 2, 3, 4, 5, 6].map((i) => (
                                 <div className="col-md-6 col-lg-4" key={i}>
                                     <div className="design-card skeleton-card" style={{
-                                        background: "rgba(255,255,255,0.02)",
-                                        border: "1px solid rgba(255,255,255,0.05)",
+                                        background: "var(--black-4)",
+                                        border: "1px solid var(--black-8)",
                                         borderRadius: "16px",
                                         height: "280px",
                                         display: "flex",
@@ -295,13 +307,13 @@ export function Work() {
                                         padding: "16px"
                                     }}>
                                         <div className="skeleton-image" style={{
-                                            background: "rgba(255,255,255,0.03)",
+                                            background: "var(--black-6)",
                                             height: "75%",
                                             borderRadius: "12px",
                                             animation: "pulse 1.5s infinite ease-in-out"
                                         }} />
                                         <div className="skeleton-text" style={{
-                                            background: "rgba(255,255,255,0.03)",
+                                            background: "var(--black-6)",
                                             height: "15%",
                                             width: "60%",
                                             borderRadius: "4px",
@@ -320,8 +332,8 @@ export function Work() {
                                         cursor: "pointer",
                                         borderRadius: "16px",
                                         overflow: "hidden",
-                                        background: "rgba(255,255,255,0.02)",
-                                        border: "1px solid rgba(255,255,255,0.06)",
+                                        background: "var(--black-4)",
+                                        border: "1px solid var(--black-8)",
                                         transition: "all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)",
                                         height: "100%",
                                         display: "flex",
@@ -339,6 +351,7 @@ export function Work() {
                                                     src={d.thumbnail}
                                                     alt={d.title}
                                                     fill
+                                                    unoptimized
                                                     style={{
                                                         objectFit: "cover",
                                                         transition: "transform 0.5s ease"
@@ -403,7 +416,7 @@ export function Work() {
                                                 color: "var(--color-primary, #0088ff)",
                                                 fontWeight: 600
                                             }}>{d.category}</span>
-                                            <h5 className="card-title text-white-72" style={{
+                                            <h5 className="card-title text-black-72" style={{
                                                 margin: 0,
                                                 fontSize: "16px",
                                                 fontWeight: 500,
@@ -443,7 +456,9 @@ export function Work() {
                 >
                     
                     {/* Close Button */}
-                    <button style={{
+                    <button 
+                        aria-label="Close project showcase"
+                        style={{
                         position: "fixed",
                         top: "24px",
                         right: "24px",
@@ -468,7 +483,9 @@ export function Work() {
                     </button>
 
                     {/* Navigation Buttons */}
-                    <button style={{
+                    <button 
+                        aria-label="Previous project"
+                        style={{
                         position: "fixed",
                         left: "24px",
                         top: "50%",
@@ -495,7 +512,9 @@ export function Work() {
                         &#10229;
                     </button>
 
-                    <button style={{
+                    <button 
+                        aria-label="Next project"
+                        style={{
                         position: "fixed",
                         right: "24px",
                         top: "50%",
@@ -582,6 +601,7 @@ export function Work() {
                                                 src={img}
                                                 alt={`${resolvedDesigns[lightboxIndex].title} - slide ${idx + 1}`}
                                                 fill
+                                                unoptimized
                                                 style={{
                                                     objectFit: projectImages.length > 1 ? "cover" : "contain",
                                                     animation: "fadeIn 0.5s ease-out"
