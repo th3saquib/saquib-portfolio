@@ -9,23 +9,24 @@ type DesktopSidebarProps = {
 };
 
 export function DesktopSidebar({ positionClass = "pst-v1" }: DesktopSidebarProps = {}) {
-  const { theme, setTheme } = useTheme();
+  const { theme, resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  const currentTheme = resolvedTheme || theme || "dark";
+  const isDark = mounted ? currentTheme === "dark" : true;
+
   const handleToggle = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
+    setTheme(isDark ? "light" : "dark");
   };
 
   const goTop = (e: React.MouseEvent) => {
     e.preventDefault();
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-
-  const isDark = mounted && theme === "dark";
 
   return (
     <div className={`sidebar-tools ${positionClass}`}>

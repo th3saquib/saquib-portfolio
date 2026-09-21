@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { BodyBackground } from "./BodyBackground";
-import { SettingColorMenu } from "./SettingColorMenu";
 import { MobileMenu } from "./MobileMenu";
 import { DesktopSidebar } from "./DesktopSidebar";
 import { HeaderClock } from "./HeaderClock";
@@ -41,33 +40,16 @@ export type HomeShellProps = {
 export function HomeShell({
     defaultMode = "dark",
     showCloudBg = true,
-    showVideoBg = false,
-    videoSrc,
+    showVideoBg = true,
+    videoSrc = "/assets/images/overlay-3.mp4",
     bodyClass = "counter-scroll",
     variant = "v1",
     introVariant,
     aboutVariant,
     preloaderDark,
 }: HomeShellProps) {
-    const [videoEnabled, setVideoEnabled] = useState<boolean>(showVideoBg);
-    const [selectedVideo, setSelectedVideo] = useState<string>(videoSrc ?? "/assets/images/overlay-2.mp4");
-
-    useEffect(() => {
-        const savedEnabled = localStorage.getItem("saquib-video-enabled");
-        const savedSrc = localStorage.getItem("saquib-video-src");
-
-        if (savedEnabled !== null) {
-            setVideoEnabled(savedEnabled === "true");
-        } else {
-            setVideoEnabled(showVideoBg);
-        }
-
-        if (savedSrc !== null) {
-            setSelectedVideo(savedSrc);
-        } else if (videoSrc) {
-            setSelectedVideo(videoSrc);
-        }
-    }, [showVideoBg, videoSrc]);
+    const videoEnabled = showVideoBg;
+    const selectedVideo = videoSrc;
 
     useBodyThemeClass({ defaultMode });
 
@@ -113,7 +95,6 @@ export function HomeShell({
     const headerOutsideMain = variant === "v2";
     const showMobileMenu = variant !== "v2";
     const sidebarPositionClass = variant === "v2" ? "pst-v2" : "pst-v1";
-    const leftBarPositionClass = variant === "v2" ? "pst-v2" : "";
 
     const preloadIsDark = preloaderDark ?? defaultMode === "dark";
 
@@ -125,14 +106,6 @@ export function HomeShell({
                 showCloudItem={showCloudBg}
                 showVideo={videoEnabled}
                 videoSrc={selectedVideo}
-            />
-
-            <SettingColorMenu 
-                leftBarClass={leftBarPositionClass} 
-                videoEnabled={videoEnabled}
-                setVideoEnabled={setVideoEnabled}
-                selectedVideo={selectedVideo}
-                setSelectedVideo={setSelectedVideo}
             />
 
             {showMobileMenu && <MobileMenu />}

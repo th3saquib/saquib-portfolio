@@ -18,6 +18,16 @@ export type GraphicDesign = {
 
 export const works: Work[] = [
   {
+    title: "Woodcell Interiors",
+    description: "An enterprise commercial furniture manufacturer platform featuring bespoke modular workstations, interactive product catalogues, BIFMA-compliant architectural specs, and rapid inquiry routing.",
+    year: "2026",
+    role: "Full Stack Web Developer",
+    tags: ["Next.js", "React.js", "Tailwind CSS", "TypeScript", "B2B E-Commerce"],
+    image: "/assets/images/screenshot/woodcellinteriors.png",
+    url: "https://woodcellinteriors.com/",
+    logo: "/assets/images/brand/woodcell-logo.png",
+  },
+  {
     title: "Aprazer Healthcare",
     description: "A custom pharmaceutical corporate portal and medicine verification registry, optimized for global regulatory standards, core speed performance, and responsive layout.",
     year: "2026",

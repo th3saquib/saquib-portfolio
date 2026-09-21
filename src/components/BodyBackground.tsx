@@ -11,13 +11,13 @@ export function BodyBackground({
   showCloudItem = true,
   showVideo = true,
   containerClass = "",
-  videoSrc = "/assets/images/overlay-2.mp4",
+  videoSrc = "/assets/images/overlay-3.mp4",
 }: Props = {}) {
   const normalizedVideoSrc = videoSrc
     ? videoSrc.startsWith("/") || videoSrc.startsWith("http")
       ? videoSrc
       : `/${videoSrc}`
-    : "/assets/images/overlay-2.mp4";
+    : "/assets/images/overlay-3.mp4";
 
   return (
     <div className={`body-background${containerClass ? " " + containerClass : ""}`}>

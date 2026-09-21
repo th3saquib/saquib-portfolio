@@ -346,4 +346,29 @@ form textarea {
   }
 }
 
+/* Fixed Theme Backgrounds */
+.body-background {
+  background: var(--white);
+}
 
+.dark-mode {
+  .body-background {
+    background:
+      linear-gradient(0deg, #14151a, #14151a),
+      linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.08) 100%
+      );
+  }
+
+  .sidebar-user .user-image {
+    background:
+      linear-gradient(0deg, #14151a, #14151a),
+      linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.08) 100%
+      );
+  }
+}
