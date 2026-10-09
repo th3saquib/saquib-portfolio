@@ -13,6 +13,12 @@ export const techStack: TechItem[] = [
     progress: 95,
   },
   {
+    name: "Frappe & ERPNext",
+    duty: "Custom DocTypes, Scripts & Workflows",
+    image: { light: "/assets/images/section/tech-erpnext.svg", width: 28, height: 28 },
+    progress: 85,
+  },
+  {
     name: "JavaScript & React",
     duty: "Modern Frontend Web Apps",
     image: { light: "/assets/images/section/tech-js.svg", width: 28, height: 28 },

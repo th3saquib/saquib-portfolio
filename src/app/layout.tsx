@@ -6,17 +6,17 @@ import SmoothScroll from "@/hooks/SmoothScroll";
 import "./globals.scss";
 
 export const metadata: Metadata = {
-    title: "Saquib Ali | Web Developer & Automation Engineer",
+    title: "Saquib Ali | Web & ERPNext Developer | Automation Engineer",
     description:
-        "Saquib Ali - Web Developer & Automation Engineer. Specializing in high-performance websites and workflow automation. Let's build your next project!",
+        "Saquib Ali - Web Developer, ERPNext & Frappe Developer, and Automation Engineer. Specializing in high-performance web applications, ERP customizations, and intelligent workflows.",
     authors: [{ name: "Saquib Ali" }],
-    keywords: ["Saquib Ali", "Web Developer", "Automation Specialist", "WordPress Developer", "PHP Developer", "N8N Automation", "Claude API", "Delhi Developer"],
+    keywords: ["Saquib Ali", "Web Developer", "ERPNext Developer", "Frappe Developer", "Automation Specialist", "WordPress Developer", "PHP Developer", "N8N Automation", "Claude API", "Delhi Developer"],
     alternates: {
         canonical: "https://craftwrk.online",
     },
     openGraph: {
-        title: "Saquib Ali | Web Developer & Automation Engineer",
-        description: "Saquib Ali - Web Developer & Automation Engineer. Specializing in high-performance websites and workflow automation. Let's build your next project!",
+        title: "Saquib Ali | Web & ERPNext Developer | Automation Engineer",
+        description: "Saquib Ali - Web Developer, ERPNext & Frappe Developer, and Automation Engineer. Specializing in high-performance web applications, ERP customizations, and intelligent workflows.",
         url: "https://craftwrk.online",
         siteName: "Saquib Ali Portfolio",
         locale: "en_US",
@@ -32,8 +32,8 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: "summary_large_image",
-        title: "Saquib Ali | Web Developer & Automation Engineer",
-        description: "Saquib Ali - Web Developer & Automation Engineer. Specializing in high-performance websites and workflow automation. Let's build your next project!",
+        title: "Saquib Ali | Web & ERPNext Developer | Automation Engineer",
+        description: "Saquib Ali - Web Developer, ERPNext & Frappe Developer, and Automation Engineer. Specializing in high-performance web applications, ERP customizations, and intelligent workflows.",
     },
     icons: {
         icon: "/assets/images/logo/favicon.svg",

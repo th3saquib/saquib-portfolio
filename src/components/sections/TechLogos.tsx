@@ -54,6 +54,18 @@ export function TechLogos() {
         
         // Backend
         {
+            name: "ERPNext",
+            category: "backend",
+            color: "rgba(0, 137, 255, 0.15)",
+            icon: "erpnext.svg"
+        },
+        {
+            name: "Frappe Framework",
+            category: "backend",
+            color: "rgba(0, 137, 255, 0.15)",
+            icon: "frappe.svg"
+        },
+        {
             name: "WordPress",
             category: "backend",
             color: "rgba(33, 117, 155, 0.15)",
@@ -171,7 +183,7 @@ export function TechLogos() {
                     & Toolkit
                 </h4>
                 <p className="text text-black-56 text-body-2" style={{ maxWidth: "480px", marginTop: "12px" }}>
-                    Expertise in building responsive frontend apps, custom CMS templates, DevOps hosting, and AI-driven automated workflows.
+                    Expertise in building responsive frontend apps, Frappe & ERPNext customization, custom CMS templates, DevOps hosting, and AI-driven automated workflows.
                 </p>
             </div>
 

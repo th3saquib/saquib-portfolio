@@ -19,6 +19,15 @@ export const services: Service[] = [
   },
   {
     id: "service-2",
+    title: "Frappe & ERPNext Customization",
+    description:
+      "Developing and customizing ERPNext and Frappe applications. Building custom DocTypes, Server Scripts, Client Scripts, automated business workflows, custom print formats, and REST API integrations.",
+    tags: ["Custom DocTypes", "Frappe Framework", "Python & JS Scripts", "ERP Workflows"],
+    images: ["/assets/images/section/service-3.jpg", "/assets/images/section/service-5.jpg"],
+    expanded: false,
+  },
+  {
+    id: "service-3",
     title: "Web & UI/UX Development",
     description:
       "Translating complex wireframes and UI designs into pixel-accurate, responsive front-end pages. Proficient in HTML5, CSS3, ES6+ JavaScript, React.js, and implementing design systems.",
@@ -27,7 +36,7 @@ export const services: Service[] = [
     expanded: false,
   },
   {
-    id: "service-3",
+    id: "service-4",
     title: "AI & Workflow Automation",
     description:
       "Creating custom automated workflows with N8N, Claude API, Botpress, and WhatsApp Cloud API to speed up lead routing, automate client documentation, and generate marketing assets.",

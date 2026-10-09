@@ -24,6 +24,7 @@ export default function Home() {
         "sameAs": profile.socials.map((s) => s.href),
         "knowsAbout": [
           "Web Development",
+          "ERPNext & Frappe Development",
           "Automation Engineering",
           "WordPress Theme Development",
           "React",
