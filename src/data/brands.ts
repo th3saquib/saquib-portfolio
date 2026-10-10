@@ -6,6 +6,7 @@ export type Brand = {
 };
 
 export const brands: Brand[] = [
+  { name: "Indisky Herbs", light: "/assets/images/brand/indisky-logo-black.png", dark: "/assets/images/brand/indisky-logo.png", width: 140 },
   { name: "Woodcell Interiors", light: "/assets/images/brand/woodcell-logo-black.png", dark: "/assets/images/brand/woodcell-logo.png", width: 140 },
   { name: "Aprazer Healthcare", light: "/assets/images/brand/aprazer-logo-black.png", dark: "/assets/images/brand/aprazer-logo.png", width: 140 },
   { name: "Metropole Group", light: "/assets/images/brand/metropole-logo-black.png", dark: "/assets/images/brand/metropole-logo.png", width: 140 },

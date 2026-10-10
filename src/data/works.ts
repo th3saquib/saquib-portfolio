@@ -28,6 +28,16 @@ export const works: Work[] = [
     logo: "/assets/images/brand/woodcell-logo.png",
   },
   {
+    title: "Indisky Herbs",
+    description: "A premier Ayurvedic healthcare and herbal wellness portal featuring classical botanical remedies, interactive product catalogues, dosage enquiry workflows, and streamlined WhatsApp ordering.",
+    year: "2026",
+    role: "Full Stack Web Developer",
+    tags: ["Vite", "JavaScript (ES6+)", "CSS3 Design System", "Schema.org SEO", "Herbal E-Commerce"],
+    image: "/assets/images/screenshot/indiskyherbs.png",
+    url: "https://indiskyherbs.com/",
+    logo: "/assets/images/brand/indisky-logo.png",
+  },
+  {
     title: "Aprazer Healthcare",
     description: "A custom pharmaceutical corporate portal and medicine verification registry, optimized for global regulatory standards, core speed performance, and responsive layout.",
     year: "2026",

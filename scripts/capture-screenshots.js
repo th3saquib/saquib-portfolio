@@ -27,6 +27,8 @@ loadEnv();
 const apiKey = process.env.SNAPRENDER_API_KEY || "YOUR_API_KEY";
 
 const sites = [
+  { url: "https://woodcellinteriors.com/", file: "woodcellinteriors.png" },
+  { url: "https://indiskyherbs.com/", file: "indiskyherbs.png" },
   { url: "https://aprazerhealthcare.com/", file: "aprazer.png" },
   { url: "https://gandhimedicos.in/", file: "gandhimedicos.png" },
   { url: "https://themetropolegroup.com/", file: "themetropolegroup.png" },
@@ -85,6 +87,11 @@ async function run() {
   const snap = new SnapRenderClass({ apiKey });
 
   for (const site of sites) {
+    const filePath = path.join(outputDir, site.file);
+    if (fs.existsSync(filePath) && !process.argv.includes("--force")) {
+      console.log(`Screenshot ${site.file} already exists, skipping. Use --force to recapture.`);
+      continue;
+    }
     try {
       console.log(`Capturing ${site.url} using SnapRender...`);
       const buffer = await snap.capture({
@@ -93,7 +100,6 @@ async function run() {
         blockAds: true,
         blockCookieBanners: true,
       });
-      const filePath = path.join(outputDir, site.file);
       fs.writeFileSync(filePath, buffer);
       console.log(`Successfully saved screenshot to ${site.file}`);
     } catch (e) {
