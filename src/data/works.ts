@@ -18,16 +18,6 @@ export type GraphicDesign = {
 
 export const works: Work[] = [
   {
-    title: "Woodcell Interiors",
-    description: "An enterprise commercial furniture manufacturer platform featuring bespoke modular workstations, interactive product catalogues, BIFMA-compliant architectural specs, and rapid inquiry routing.",
-    year: "2026",
-    role: "Full Stack Web Developer",
-    tags: ["Next.js", "React.js", "Tailwind CSS", "TypeScript", "B2B E-Commerce"],
-    image: "/assets/images/screenshot/woodcellinteriors.png",
-    url: "https://woodcellinteriors.com/",
-    logo: "/assets/images/brand/woodcell-logo.png",
-  },
-  {
     title: "Indisky Herbs",
     description: "A premier Ayurvedic healthcare and herbal wellness portal featuring classical botanical remedies, interactive product catalogues, dosage enquiry workflows, and streamlined WhatsApp ordering.",
     year: "2026",
@@ -36,6 +26,16 @@ export const works: Work[] = [
     image: "/assets/images/screenshot/indiskyherbs.png",
     url: "https://indiskyherbs.com/",
     logo: "/assets/images/brand/indisky-logo.png",
+  },
+  {
+    title: "Gandhi Medicos",
+    description: "An international pharmaceutical exporter platform for global medicine inquiries, built as a modern web application with high performance, instant search, and responsive UX.",
+    year: "2025",
+    role: "Frontend Developer",
+    tags: ["Next.js", "React.js", "Tailwind CSS", "React Query", "REST APIs"],
+    image: "/assets/images/screenshot/gandhimedicos.png",
+    url: "https://gandhimedicos.in/",
+    logo: "/assets/images/brand/dean-logo.jpeg",
   },
   {
     title: "Aprazer Healthcare",
@@ -48,14 +48,14 @@ export const works: Work[] = [
     logo: "/assets/images/brand/aprazer-logo.png",
   },
   {
-    title: "Gandhi Medicos",
-    description: "An international pharmaceutical exporter platform for global medicine inquiries, built as a modern web application with high performance, instant search, and responsive UX.",
-    year: "2025",
-    role: "Frontend Developer",
-    tags: ["Next.js", "React.js", "Tailwind CSS", "React Query", "REST APIs"],
-    image: "/assets/images/screenshot/gandhimedicos.png",
-    url: "https://gandhimedicos.in/",
-    logo: "/assets/images/brand/dean-logo.jpeg",
+    title: "Woodcell Interiors",
+    description: "An enterprise commercial furniture manufacturer platform featuring bespoke modular workstations, interactive product catalogues, BIFMA-compliant architectural specs, and rapid inquiry routing.",
+    year: "2026",
+    role: "Full Stack Web Developer",
+    tags: ["Next.js", "React.js", "Tailwind CSS", "TypeScript", "B2B E-Commerce"],
+    image: "/assets/images/screenshot/woodcellinteriors.png",
+    url: "https://woodcellinteriors.com/",
+    logo: "/assets/images/brand/woodcell-logo.png",
   },
   {
     title: "The Metropole Group",
