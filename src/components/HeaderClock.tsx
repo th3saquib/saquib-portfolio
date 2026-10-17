@@ -1,4 +1,4 @@
-import { ImageSwitch } from "./ImageSwitch";
+import Link from "next/link";
 import { Logo } from "./Logo";
 
 type HeaderClockProps = {
@@ -9,9 +9,9 @@ export function HeaderClock({ variant = "v1" }: HeaderClockProps = {}) {
   const leftClass = variant === "v1" ? "left" : "left p-0";
   return (
     <div className="tf-header-wrap">
-      <a href="/" className="logo-site d-lg-none">
+      <Link href="/" className="logo-site d-lg-none" aria-label="Saquib Ali Home">
         <Logo width={40} height={40} />
-      </a>
+      </Link>
       <div className={leftClass}>
         <div className="time-local text-body-3">
           <p className="date" />

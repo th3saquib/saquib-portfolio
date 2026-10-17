@@ -1,4 +1,3 @@
-import { ImageSwitch } from "@/components/ImageSwitch";
 import { Logo } from "@/components/Logo";
 
 export function Footer() {

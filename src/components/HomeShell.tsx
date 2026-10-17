@@ -8,10 +8,7 @@ import { HeaderClock } from "./HeaderClock";
 import { UserSidebar } from "./UserSidebar";
 import { Preloader } from "./Preloader";
 import { Intro } from "./sections/Intro";
-import { IntroV2 } from "./sections/IntroV2";
-import { IntroV3 } from "./sections/IntroV3";
 import { About } from "./sections/About";
-import { AboutV2 } from "./sections/AboutV2";
 import { Education } from "./sections/Education";
 import { Work } from "./sections/Work";
 import { Services } from "./sections/Services";
@@ -31,9 +28,6 @@ export type HomeShellProps = {
     showVideoBg?: boolean;
     videoSrc?: string;
     bodyClass?: string;
-    variant?: "v1" | "v2" | "v3";
-    introVariant?: "v1" | "v2" | "v3";
-    aboutVariant?: "v1" | "v2";
     preloaderDark?: boolean;
 };
 
@@ -43,14 +37,8 @@ export function HomeShell({
     showVideoBg = true,
     videoSrc = "/assets/images/overlay-3.mp4",
     bodyClass = "counter-scroll",
-    variant = "v1",
-    introVariant,
-    aboutVariant,
     preloaderDark,
-}: HomeShellProps) {
-    const videoEnabled = showVideoBg;
-    const selectedVideo = videoSrc;
-
+}: HomeShellProps = {}) {
     useBodyThemeClass({ defaultMode });
 
     useEffect(() => {
@@ -66,35 +54,17 @@ export function HomeShell({
 
     useEffect(() => {
         const body = document.body;
-        if (videoEnabled) {
+        if (showVideoBg) {
             body.classList.add("video-v1");
         } else {
             body.classList.remove("video-v1");
         }
-    }, [videoEnabled]);
+    }, [showVideoBg]);
 
     useClock();
     useInfiniteSlide();
     useHeadlineRotate();
     useSaquibAnimations();
-
-    const introResolved = introVariant ?? variant;
-
-    const aboutResolved =
-        aboutVariant ?? (variant === "v2" ? "v2" : "v1");
-
-    const IntroComponent =
-        introResolved === "v2"
-            ? IntroV2
-            : introResolved === "v3"
-              ? IntroV3
-              : Intro;
-
-    const AboutComponent = aboutResolved === "v2" ? AboutV2 : About;
-
-    const headerOutsideMain = variant === "v2";
-    const showMobileMenu = variant !== "v2";
-    const sidebarPositionClass = variant === "v2" ? "pst-v2" : "pst-v1";
 
     const preloadIsDark = preloaderDark ?? defaultMode === "dark";
 
@@ -104,28 +74,26 @@ export function HomeShell({
 
             <BodyBackground
                 showCloudItem={showCloudBg}
-                showVideo={videoEnabled}
-                videoSrc={selectedVideo}
+                showVideo={showVideoBg}
+                videoSrc={videoSrc}
             />
 
-            {showMobileMenu && <MobileMenu />}
+            <MobileMenu />
 
-            {headerOutsideMain && <HeaderClock variant={variant} />}
-
-            <DesktopSidebar positionClass={sidebarPositionClass} />
+            <DesktopSidebar positionClass="pst-v1" />
 
             <main id="wrapper">
-                {!headerOutsideMain && <HeaderClock variant={variant} />}
+                <HeaderClock variant="v1" />
 
-                <UserSidebar variant={variant} />
+                <UserSidebar variant="v1" />
 
                 <div className="main-content">
                     <div className="container">
                         <div className="row">
                             <div className="col-lg-7 col-xl-8 ms-auto">
                                 <div className="wrap-container">
-                                    <IntroComponent />
-                                    <AboutComponent />
+                                    <Intro />
+                                    <About />
                                     <Education />
                                     <Work />
                                     <Services />
@@ -141,4 +109,4 @@ export function HomeShell({
             </main>
         </>
     );
-}
+}

@@ -1,0 +1,75 @@
+name: CI/CD Deployment Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: production-deployment
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    name: Build & Zero-Overhead Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Linter
+        run: npm run lint
+
+      - name: Build Next.js Production Bundle
+        env:
+          NODE_ENV: production
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+          BREVO_SENDER_EMAIL: ${{ secrets.BREVO_SENDER_EMAIL }}
+          BREVO_RECEIVER_EMAIL: ${{ secrets.BREVO_RECEIVER_EMAIL }}
+          SNAPRENDER_API_KEY: ${{ secrets.SNAPRENDER_API_KEY }}
+        run: npm run build
+
+      - name: Archive Production Bundle
+        run: tar -czf build.tar.gz .next
+
+      - name: Deploy to Oracle Cloud via SSH
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          echo "--> Transferring pre-built .next bundle to Oracle VM..."
+          scp -o StrictHostKeyChecking=no -P $SSH_PORT -i ~/.ssh/deploy_key build.tar.gz $SSH_USER@$SSH_HOST:/var/www/apps/craftwrk.online/build.tar.gz
+
+          echo "--> Executing atomic deployment on Oracle VM..."
+          ssh -o StrictHostKeyChecking=no -p $SSH_PORT -i ~/.ssh/deploy_key $SSH_USER@$SSH_HOST << 'EOF'
+            set -e
+            cd /var/www/apps/craftwrk.online
+            echo "[1/4] Pulling latest code..."
+            git fetch origin main
+            git reset --hard origin/main
+            echo "[2/4] Extracting pre-built bundle..."
+            tar -xzf build.tar.gz
+            rm -f build.tar.gz
+            echo "[3/4] Updating production dependencies..."
+            npm ci --omit=dev
+            echo "[4/4] Restarting PM2 process..."
+            pm2 restart craftwrk.online
+            echo "=== Zero-Downtime Deployment Successfully Completed! ==="
+          EOF

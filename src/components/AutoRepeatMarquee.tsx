@@ -30,24 +30,27 @@ export default function AutoRepeatMarquee({
   const childrenCount = Array.isArray(children) ? children.length : 1;
 
   useEffect(() => {
-    if ((direction === "left" || direction === "right") && !repeat) {
+    if (repeat) return;
+
+    if (direction === "left" || direction === "right") {
       const updateRepeatCount = () => {
         const containerWidth = containerRef.current?.offsetWidth || 0;
         const contentWidth = contentRef.current?.scrollWidth || 0;
 
         if (containerWidth && contentWidth) {
           const neededRepeat = Math.ceil(containerWidth / contentWidth) + 1;
-          setRepeatCount(neededRepeat);
+          setRepeatCount((prev) => (prev !== neededRepeat ? neededRepeat : prev));
         }
       };
 
-      updateRepeatCount();
+      const handle = requestAnimationFrame(updateRepeatCount);
       const resizeObserver = new ResizeObserver(updateRepeatCount);
       if (containerRef.current) resizeObserver.observe(containerRef.current);
 
-      return () => resizeObserver.disconnect();
-    } else if (repeat) {
-      setRepeatCount(repeat);
+      return () => {
+        cancelAnimationFrame(handle);
+        resizeObserver.disconnect();
+      };
     }
   }, [childrenCount, direction, repeat]);
 

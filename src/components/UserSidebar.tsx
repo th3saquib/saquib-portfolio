@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { ImageSwitch } from "./ImageSwitch";
 import { Logo } from "./Logo";
 import { profile } from "@/data/profile";
@@ -129,9 +128,16 @@ export function UserSidebar({ variant = "v1" }: UserSidebarProps) {
                                 <i className="icon icon-arrow-right-top" />
                             </span>
                         </a>
-                        <a href="/assets/resume/Saquib-Resume.pdf" className="action-down" download target="_blank" rel="noopener noreferrer">
-                            <i className="icon icon-download" />
-                            <span className="text-body-3">Download CV</span>
+                        <a
+                            href="/assets/resume/Saquib_Ali_Resume.pdf"
+                            className="action-down"
+                            download="Saquib_Ali_Resume.pdf"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Download Saquib Ali's Resume"
+                        >
+                            <i className="icon icon-download" aria-hidden="true" />
+                            <span className="text-body-3">Download Resume</span>
                         </a>
                     </div>
                 </div>

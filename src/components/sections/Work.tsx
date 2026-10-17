@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { works, graphicDesigns } from "@/data/works";
 
 interface BehanceProject {
@@ -14,51 +14,74 @@ interface BehanceProject {
     category: string;
 }
 
+const localFallbackDesigns: BehanceProject[] = graphicDesigns.map((d, index) => ({
+    id: `local-${index}`,
+    title: d.title,
+    link: d.link || "https://www.behance.net/saquibali1",
+    publishedDate: "",
+    thumbnail: d.image,
+    image: d.image,
+    category: d.category,
+}));
+
 export function Work() {
     const [activeTab, setActiveTab] = useState<"websites" | "design">("websites");
     const [behanceProjects, setBehanceProjects] = useState<BehanceProject[]>([]);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
     
     // Lightbox State
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
     const [loadingProjectImages, setLoadingProjectImages] = useState(false);
     const [projectImages, setProjectImages] = useState<string[]>([]);
 
-    // Use fetched Behance projects or fall back to local design array
-    const resolvedDesigns = useMemo(() => {
-        return behanceProjects.length > 0 
-            ? behanceProjects 
-            : graphicDesigns.map((d, index) => ({
-                id: `local-${index}`,
-                title: d.title,
-                link: d.link || "https://www.behance.net/saquibali1",
-                publishedDate: "",
-                thumbnail: d.image,
-                image: d.image,
-                category: d.category
-            }));
+    const resolvedDesigns = behanceProjects.length > 0 ? behanceProjects : localFallbackDesigns;
+
+    const openLightbox = useCallback((index: number) => {
+        setLightboxIndex(index);
+        const designs = behanceProjects.length > 0 ? behanceProjects : localFallbackDesigns;
+        const project = designs[index];
+        if (project && (!project.link || !project.link.includes("/gallery/"))) {
+            setProjectImages([project.image]);
+            setLoadingProjectImages(false);
+        } else {
+            setProjectImages([]);
+            setLoadingProjectImages(true);
+        }
     }, [behanceProjects]);
+
+    const closeLightbox = useCallback(() => {
+        setLightboxIndex(null);
+        setProjectImages([]);
+        setLoadingProjectImages(false);
+    }, []);
+
+    const handleTabChange = (tab: "websites" | "design") => {
+        setActiveTab(tab);
+        if (tab === "design" && behanceProjects.length === 0) {
+            setLoading(true);
+        }
+    };
 
     useEffect(() => {
         if (activeTab === "design" && behanceProjects.length === 0) {
-            setLoading(true);
+            let ignore = false;
             fetch("/api/behance")
                 .then((res) => res.json())
                 .then((data) => {
+                    if (ignore) return;
                     if (data.success && Array.isArray(data.projects) && data.projects.length > 0) {
                         setBehanceProjects(data.projects);
-                    } else {
-                        setError(true);
                     }
                 })
                 .catch((err) => {
                     console.error("Error loading Behance projects:", err);
-                    setError(true);
                 })
                 .finally(() => {
-                    setLoading(false);
+                    if (!ignore) setLoading(false);
                 });
+            return () => {
+                ignore = true;
+            };
         }
     }, [activeTab, behanceProjects.length]);
 
@@ -67,22 +90,18 @@ export function Work() {
         if (lightboxIndex === null) return;
 
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === "Escape") setLightboxIndex(null);
+            if (e.key === "Escape") closeLightbox();
             if (e.key === "ArrowRight") {
-                setLightboxIndex((prev) => 
-                    prev !== null ? (prev + 1) % resolvedDesigns.length : null
-                );
+                openLightbox((lightboxIndex + 1) % resolvedDesigns.length);
             }
             if (e.key === "ArrowLeft") {
-                setLightboxIndex((prev) => 
-                    prev !== null ? (prev - 1 + resolvedDesigns.length) % resolvedDesigns.length : null
-                );
+                openLightbox((lightboxIndex - 1 + resolvedDesigns.length) % resolvedDesigns.length);
             }
         };
 
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
-    }, [lightboxIndex, resolvedDesigns]);
+    }, [lightboxIndex, resolvedDesigns.length, openLightbox, closeLightbox]);
 
     // Lock body scroll when lightbox is open
     useEffect(() => {
@@ -98,11 +117,7 @@ export function Work() {
 
     // Fetch images inside Behance project when selected
     useEffect(() => {
-        if (lightboxIndex === null) {
-            setProjectImages([]);
-            setLoadingProjectImages(false);
-            return;
-        }
+        if (lightboxIndex === null) return;
 
         // Scroll the lightbox modal container to the top
         const modalContainer = document.getElementById("lightbox-modal");
@@ -111,21 +126,15 @@ export function Work() {
         }
 
         const project = resolvedDesigns[lightboxIndex];
-        if (!project) return;
-
-        // If it's a fallback or not a standard Behance gallery project, use the cover image
-        if (!project.link || !project.link.includes("/gallery/")) {
-            setProjectImages([project.image]);
-            setLoadingProjectImages(false);
+        if (!project || !project.link || !project.link.includes("/gallery/")) {
             return;
         }
 
-        setLoadingProjectImages(true);
-        setProjectImages([]);
-
+        let ignore = false;
         fetch(`/api/behance/project?url=${encodeURIComponent(project.link)}`)
             .then((res) => res.json())
             .then((data) => {
+                if (ignore) return;
                 if (data.success && Array.isArray(data.images) && data.images.length > 0) {
                     setProjectImages(data.images);
                 } else {
@@ -133,12 +142,17 @@ export function Work() {
                 }
             })
             .catch((err) => {
+                if (ignore) return;
                 console.error("Error loading Behance project detail images:", err);
                 setProjectImages([project.image]);
             })
             .finally(() => {
-                setLoadingProjectImages(false);
+                if (!ignore) setLoadingProjectImages(false);
             });
+
+        return () => {
+            ignore = true;
+        };
     }, [lightboxIndex, resolvedDesigns]);
 
     return (
@@ -155,14 +169,14 @@ export function Work() {
                 <button
                     type="button"
                     className={`tab-btn ${activeTab === "websites" ? "active" : ""}`}
-                    onClick={() => setActiveTab("websites")}
+                    onClick={() => handleTabChange("websites")}
                 >
                     Websites
                 </button>
                 <button
                     type="button"
                     className={`tab-btn ${activeTab === "design" ? "active" : ""}`}
-                    onClick={() => setActiveTab("design")}
+                    onClick={() => handleTabChange("design")}
                 >
                     Graphic Design
                 </button>
@@ -327,7 +341,7 @@ export function Work() {
                     ) : (
                         <div className="design-gallery row g-4">
                             {resolvedDesigns.map((d, index) => (
-                                <div className="col-md-6 col-lg-4" key={d.id} onClick={() => setLightboxIndex(index)}>
+                                <div className="col-md-6 col-lg-4" key={d.id} onClick={() => openLightbox(index)}>
                                     <div className="design-card hover-glow" style={{
                                         cursor: "pointer",
                                         borderRadius: "16px",
@@ -452,7 +466,7 @@ export function Work() {
                         overflowY: "auto",
                         padding: "80px 0 40px 0"
                     }} 
-                    onClick={() => setLightboxIndex(null)}
+                    onClick={closeLightbox}
                 >
                     
                     {/* Close Button */}
@@ -477,7 +491,7 @@ export function Work() {
                         transition: "background-color 0.2s"
                     }} onClick={(e) => {
                         e.stopPropagation();
-                        setLightboxIndex(null);
+                        closeLightbox();
                     }}>
                         &times;
                     </button>
@@ -505,9 +519,7 @@ export function Work() {
                         transition: "background-color 0.2s"
                     }} onClick={(e) => {
                         e.stopPropagation();
-                        setLightboxIndex((prev) => 
-                            prev !== null ? (prev - 1 + resolvedDesigns.length) % resolvedDesigns.length : null
-                        );
+                        openLightbox((lightboxIndex - 1 + resolvedDesigns.length) % resolvedDesigns.length);
                     }}>
                         &#10229;
                     </button>
@@ -534,9 +546,7 @@ export function Work() {
                         transition: "background-color 0.2s"
                     }} onClick={(e) => {
                         e.stopPropagation();
-                        setLightboxIndex((prev) => 
-                            prev !== null ? (prev + 1) % resolvedDesigns.length : null
-                        );
+                        openLightbox((lightboxIndex + 1) % resolvedDesigns.length);
                     }}>
                         &#10230;
                     </button>

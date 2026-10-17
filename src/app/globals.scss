@@ -372,3 +372,23 @@ form textarea {
       );
   }
 }
+
+/* Responsive Action Group & Resume Button */
+.sidebar-user {
+  .action-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .action-down {
+    white-space: nowrap;
+    transition: color 0.2s ease, transform 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+  }
+}

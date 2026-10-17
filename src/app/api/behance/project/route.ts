@@ -109,7 +109,7 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    let images: string[] = [];
+    const images: string[] = [];
 
     // 3. Attempt parsing the window state modules JSON
     const modulesStartIdx = html.indexOf('"modules":[');
@@ -129,18 +129,18 @@ export async function GET(request: NextRequest) {
         
         if (Array.isArray(modules)) {
           // Extract URLs from ImageModule type modules
-          for (const module of modules) {
-            if (module.__typename === "ImageModule" || module.src) {
-              let imgUrl = module.src;
+          for (const mod of modules) {
+            if (mod.__typename === "ImageModule" || mod.src) {
+              let imgUrl = mod.src;
               
               // If there are sizes, pick the best one
-              if (module.imageSizes && typeof module.imageSizes === "object") {
-                const available = module.imageSizes.allAvailable || [];
+              if (mod.imageSizes && typeof mod.imageSizes === "object") {
+                const available = mod.imageSizes.allAvailable || [];
                 if (Array.isArray(available) && available.length > 0) {
                   // Find the best quality JPG or fallback to any format sorted by preferred size
                   const sorted = available
-                    .filter((item: any) => item && item.url)
-                    .sort((a: any, b: any) => {
+                    .filter((item: { url?: string }) => item && item.url)
+                    .sort((a: { url: string }, b: { url: string }) => {
                       const sizeA = a.url.split("/").slice(-2, -1)[0];
                       const sizeB = b.url.split("/").slice(-2, -1)[0];
                       
@@ -160,8 +160,8 @@ export async function GET(request: NextRequest) {
                   // If allAvailable is not present, check individual properties
                   for (const prefSize of SIZE_PREFERENCE) {
                     const key = `size_${prefSize}`;
-                    if (module.imageSizes[key] && module.imageSizes[key].url) {
-                      imgUrl = module.imageSizes[key].url;
+                    if (mod.imageSizes[key] && mod.imageSizes[key].url) {
+                      imgUrl = mod.imageSizes[key].url;
                       break;
                     }
                   }
@@ -200,7 +200,7 @@ export async function GET(request: NextRequest) {
         }
         
         // For each group, select the best URL according to quality preference
-        for (const [filename, urls] of groupedByFilename.entries()) {
+        for (const urls of groupedByFilename.values()) {
           const sorted = urls.sort((a, b) => {
             const sizeA = a.split("/").slice(-2, -1)[0];
             const sizeB = b.split("/").slice(-2, -1)[0];
@@ -226,10 +226,11 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true, images });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error fetching Behance project detail:", error);
+    const message = error instanceof Error ? error.message : "Failed to load project details";
     return NextResponse.json(
-      { success: false, error: error.message || "Failed to load project details" },
+      { success: false, error: message },
       { status: 500 }
     );
   }

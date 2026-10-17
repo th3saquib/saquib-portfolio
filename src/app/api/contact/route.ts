@@ -1,13 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
 
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const { name, email, message } = await request.json();
+    const { name, email, message, website } = await request.json();
 
-    // Basic validation
-    if (!name || !email) {
+    // Honeypot check for spam bots
+    if (website) {
+      return NextResponse.json({ success: true, messageId: "bot-ignored" });
+    }
+
+    // Input validation & type checks
+    if (!name || typeof name !== "string" || !email || typeof email !== "string") {
       return NextResponse.json(
         { success: false, error: "Name and email are required fields." },
+        { status: 400 }
+      );
+    }
+
+    const trimmedName = name.trim().slice(0, 100);
+    const trimmedEmail = email.trim().slice(0, 254);
+    const trimmedMessage = typeof message === "string" ? message.trim().slice(0, 5000) : "";
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      return NextResponse.json(
+        { success: false, error: "Please provide a valid email address." },
         { status: 400 }
       );
     }
@@ -23,6 +49,10 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
+
+    const safeName = escapeHtml(trimmedName);
+    const safeEmail = escapeHtml(trimmedEmail);
+    const safeMessage = escapeHtml(trimmedMessage);
 
     // Call Brevo API
     const response = await fetch("https://api.brevo.com/v3/smtp/email", {
@@ -44,10 +74,10 @@ export async function POST(request: NextRequest) {
           },
         ],
         replyTo: {
-          email: email,
-          name: name,
+          email: trimmedEmail,
+          name: trimmedName,
         },
-        subject: `New Portfolio Contact: ${name}`,
+        subject: `New Portfolio Contact: ${trimmedName}`,
         htmlContent: `
           <!DOCTYPE html>
           <html>
@@ -92,21 +122,21 @@ export async function POST(request: NextRequest) {
                 <h2>New Contact Enquiry</h2>
                 <div class="field">
                   <div class="label">Name:</div>
-                  <div class="value">${name}</div>
+                  <div class="value">${safeName}</div>
                 </div>
                 <div class="field">
                   <div class="label">Email:</div>
-                  <div class="value">${email}</div>
+                  <div class="value">${safeEmail}</div>
                 </div>
                 <div class="field">
                   <div class="label">Message / Project Description:</div>
-                  <div class="value">${message || "No message description provided."}</div>
+                  <div class="value">${safeMessage || "No message description provided."}</div>
                 </div>
               </div>
             </body>
           </html>
         `,
-        textContent: `New Portfolio Contact Enquiry\n\nName: ${name}\nEmail: ${email}\nMessage: ${message || "No message description provided."}`,
+        textContent: `New Portfolio Contact Enquiry\n\nName: ${trimmedName}\nEmail: ${trimmedEmail}\nMessage: ${trimmedMessage || "No message description provided."}`,
       }),
     });
 
@@ -121,10 +151,11 @@ export async function POST(request: NextRequest) {
 
     const data = await response.json();
     return NextResponse.json({ success: true, messageId: data.messageId });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Enquiry submission error:", error);
+    const message = error instanceof Error ? error.message : "An error occurred while sending your message.";
     return NextResponse.json(
-      { success: false, error: error.message || "An error occurred while sending your message." },
+      { success: false, error: message },
       { status: 500 }
     );
   }

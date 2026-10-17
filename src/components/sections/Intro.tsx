@@ -24,7 +24,7 @@ export function Intro() {
             </div>
 
             <h1 className="intro-title letter-space--2 ">
-                Hi, I'm {profile.fullName} — <br />
+                Hi, I&apos;m {profile.fullName} — <br />
                 I build <span className="is-bg">websites</span> & <span className="type-2 is-bg">automations</span>
             </h1>
 

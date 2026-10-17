@@ -65,13 +65,14 @@ export async function GET() {
     }
 
     return NextResponse.json({ success: true, projects });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Behance RSS API route error:", error);
     if (cachedProjects && cachedProjects.length > 0) {
       return NextResponse.json({ success: true, projects: cachedProjects });
     }
+    const message = error instanceof Error ? error.message : "Failed to load Behance feed";
     return NextResponse.json(
-      { success: false, error: error.message || "Failed to load Behance feed" },
+      { success: false, error: message },
       { status: 500 }
     );
   }

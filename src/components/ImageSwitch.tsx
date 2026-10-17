@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
+import { useMounted } from "@/hooks/useMounted";
 
 type Props = {
   light: string;
@@ -16,8 +16,7 @@ type Props = {
 
 export function ImageSwitch({ light, dark, alt = "Image", width, height, className, loading = "lazy" }: Props) {
   const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useMounted();
 
   const src = mounted && resolvedTheme === "dark" && dark ? dark : light;
 

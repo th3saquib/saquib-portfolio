@@ -1,7 +1,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useMounted } from "@/hooks/useMounted";
 
 type LogoProps = {
   width?: number;
@@ -11,8 +11,7 @@ type LogoProps = {
 
 export function Logo({ width = 40, height = 40, className = "" }: LogoProps) {
   const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useMounted();
 
   // Use resolvedTheme to select fill color & opacity to match the original logo colors
   const color = mounted && resolvedTheme === "dark" ? "white" : "black";

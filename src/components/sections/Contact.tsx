@@ -20,6 +20,7 @@ export function Contact() {
     const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const message = formData.get("message") as string;
+    const website = formData.get("website") as string;
 
     if (!name || !email) {
       setError("Please fill in all required fields.");
@@ -33,7 +34,7 @@ export function Contact() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email, message }),
+        body: JSON.stringify({ name, email, message, website }),
       });
 
       const data = await response.json();
@@ -44,7 +45,7 @@ export function Contact() {
       } else {
         setError(data.error || "Failed to send message. Please try again.");
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred. Please try again later.");
     } finally {
       setLoading(false);
@@ -64,6 +65,17 @@ export function Contact() {
       </h2>
       
       <form className="form-contact" id="contactform" onSubmit={handleSubmit} noValidate>
+        {/* Anti-spam honeypot */}
+        <input
+          type="text"
+          name="website"
+          id="website-hp"
+          style={{ display: "none" }}
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+        />
+
         {submitted && (
           <div className="status-alert-clean success" style={{ marginBottom: 24 }}>
             <span className="alert-bullet"></span>
