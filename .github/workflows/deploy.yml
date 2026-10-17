@@ -55,20 +55,30 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
 
           echo "--> Transferring pre-built .next bundle to Oracle VM..."
-          scp -o StrictHostKeyChecking=no -P $SSH_PORT -i ~/.ssh/deploy_key build.tar.gz $SSH_USER@$SSH_HOST:/var/www/apps/craftwrk.online/build.tar.gz
+          scp -O -o StrictHostKeyChecking=no -P $SSH_PORT -i ~/.ssh/deploy_key build.tar.gz $SSH_USER@$SSH_HOST:/var/www/apps/craftwrk.online/build.tar.gz
 
-          echo "--> Executing atomic deployment on Oracle VM..."
+          echo "--> Executing zero-overhead atomic deployment on Oracle VM..."
           ssh -o StrictHostKeyChecking=no -p $SSH_PORT -i ~/.ssh/deploy_key $SSH_USER@$SSH_HOST << 'EOF'
             set -e
             cd /var/www/apps/craftwrk.online
             echo "[1/4] Pulling latest code..."
+            OLD_HEAD=$(git rev-parse HEAD 2>/dev/null || echo "")
             git fetch origin main
             git reset --hard origin/main
+            NEW_HEAD=$(git rev-parse HEAD)
+
             echo "[2/4] Extracting pre-built bundle..."
             tar -xzf build.tar.gz
             rm -f build.tar.gz
-            echo "[3/4] Updating production dependencies..."
-            npm ci --omit=dev
+
+            echo "[3/4] Checking production dependencies..."
+            if [ -n "$OLD_HEAD" ] && git diff --name-only "$OLD_HEAD" "$NEW_HEAD" | grep -E '^package(-lock)?\.json$' > /dev/null; then
+              echo "Dependencies changed; updating safely..."
+              npm install --omit=dev --prefer-offline --no-audit --no-fund
+            else
+              echo "Dependencies unchanged; skipping npm install to safeguard 1 GB RAM."
+            fi
+
             echo "[4/4] Restarting PM2 process..."
             pm2 restart craftwrk.online
             echo "=== Zero-Downtime Deployment Successfully Completed! ==="
